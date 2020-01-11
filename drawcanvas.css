@@ -1,0 +1,26 @@
+.bg-mute {
+    background-color: #6c757d !important;
+  }
+#saltfox {
+  font-family: 'forte', 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+#togger {
+  cursor: default;
+  color: #fff;
+  background-color: #007bff;
+}
+#screenKid {
+  /* min-height: 500px !important;  */
+  /* max-height: 515px !important;  */
+  /* min-width: 500px !important; */
+  background-color: #6c757d !important;
+}
+#drawplace {
+  border: 1px solid blue;
+  cursor: crosshair;
+}
+.btn-outline-light:hover {
+  color: #212529;
+  background-color: rgba(248, 249, 250, 0.5);
+  border-color: #f8f9fa;
+}

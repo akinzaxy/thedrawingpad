@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Saltfox Canvas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="../thedrawingpad/images/icons8_Yin_Yang.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" media="screen" 
+    href="../../../webdev resource/bootstrapClass/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="drawcanvas.css" />
+    <!-- <script src="main.js"></script> -->
+</head>
+<body class="container-fluid">
+    <div class="row">
+        <div class="col text-center">
+            <div class="row text-light bg-primary">
+                <div class="col-1 ml-0 p-0 my-0">
+                    <h2 class="h2 font-weight-bold">&#9775;</h2>
+                </div>
+                <div class="col h2 font-weight-bold p-0 my-0">
+                    <h2 id="saltfox">SALTFOX CANVAS</h2>
+                </div>
+            </div>
+            <div class="row bg-light text-primary" style="height: 25px;">
+                <div class="col">
+                    <p id="hereCoords" class="text-center"></p>
+                </div>
+                <div class="col">
+                    <p id="hereClick" class="text-center"></p>
+                </div>
+                <div class="col-1">
+                    <p id="togger" onclick="controlTog()" class="font-weight-bold">&#9932;</p>
+                </div>
+            </div>
+            <div id="dimSet" class="row bg-primary text-light py-1">
+                <div class="col">
+                    <input type="text" id="boardWidth" class="form-control text-center">
+                </div>
+                <div class="col">
+                    <input type="text" id="boardHeight" class="form-control text-center">
+                </div>
+                <div class="col">
+                    <input type="button" onclick="createBoard()" value="Set Canvas" 
+                    class="btn btn-block btn-outline-light bg-primary font-weight-bold">
+                </div>
+            </div>
+            <div class="row" style="min-width: 500px; min-height: 500px">
+                <div class="col-1 bg-light py-4">
+                    <div class="row my-2 py-1 bg-primary rounded">
+                        <button class="btn w-75 btn-outline-light p-0 mx-auto" 
+                        type="button" style="height: 75px" onclick="lineActive()">
+                            <img id="" class="img-fluid" 
+                            src="../thedrawingpad/images/Line_96px.png"/>
+                        </button>
+                    </div>
+                    <div class="row my-2 py-1 bg-primary rounded">
+                        <button class="btn w-75 btn-outline-light p-0 mx-auto" 
+                        type="button" style="height: 75px" onclick="squareActive()">
+                            <img id="" class="img-fluid" 
+                            src="../thedrawingpad/images/Rectangular_96px.png"/>
+                        </button>
+                    </div>
+                    <div class="row my-2 py-1 bg-primary rounded">
+                        <button class="btn w-75 btn-outline-light p-0 mx-auto" 
+                        type="button" style="height: 75px" onclick="">
+                            <img id="" class="img-fluid" 
+                            src="../thedrawingpad/images/Circle_96px.png"/>
+                        </button>
+                    </div>
+                    <div class="row my-2 py-1 bg-primary rounded">
+                        <button class="btn w-75 btn-outline-light p-0 mx-auto" 
+                        type="button" style="height: 75px" onclick="">
+                            <img id="" class="img-fluid" 
+                            src="../thedrawingpad/images/Paint Palette_96px.png"/>
+                        </button>
+                    </div>
+                </div>
+                <div id="screenKid" class="col-11">
+                    <canvas id="drawplace" class="border-primary my-3" style="visibility: hidden">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        
+        var scrKid = document.getElementById("screenKid");
+        var inspace = document.getElementById("drawplace");
+        // var lineKid = inspace.getContext("2d");
+        // lineKid.moveTo(10, 100);
+        // lineKid.lineTo(100, 100);
+        // lineKid.stroke();
+        function createBoard() {
+            var cardX = document.getElementById("boardWidth").value;
+            var cardY = document.getElementById("boardHeight").value;
+            inspace.width = cardX;
+            inspace.height = cardY;
+            inspace.style.visibility = "visible";
+            (function(){
+                return cardDraw();
+            })();
+            (function(){
+                return controlTog();
+            })();
+            // (function (){
+                // return getCoords(event);
+            // })();
+            // return cardX = " ", cardY = " ";
+        }
+        function roost(event) {
+            var winSide = window.innerWidth;
+            var wSide80 = 85/100 * winSide;
+            var winSideStr = wSide80.toString();
+            var winHigh = window.innerHeight;
+            var wHigh80 = 85/100 * winHigh;
+            var winHighStr = wHigh80.toString();
+            var withSetNow = wSide80 * 98/100;
+            var heitSetNow = wHigh80 * 98/100;
+            inspace.width = withSetNow;
+            inspace.height = heitSetNow;
+            var tabWin = {name: "Window", height: winHigh, width: winSide};
+            var tabScrKid = {name: "screenKid", height: winHighStr, width: winSideStr};
+            var tab80 = {name: "80 value", height: wHigh80, width: wSide80};
+            var tabInspace = {name: "inspace", height: inspace.height, width: inspace.width};
+            var cardH = inspace.height; var cardW = inspace.width;
+            var tabCardb = {name: "Cardboard", height: cardH, width: cardW};
+            /* console.table([tabWin, tab80, tabScrKid, tabInspace, tabCardb]); */
+            /* DRAWING BEGINS HERE */
+            (function (){
+                return cardDraw();
+            })();
+            /* DEFINING ACTIONS */
+            (function (){
+                return getCoords(event);
+            })();
+        }
+        function cardDraw(){
+            var cardH = inspace.height; var cardW = inspace.width;
+            var tabCardb = {name: "Cardboard", height: cardH, width: cardW};
+            var cardboard = inspace.getContext("2d");
+            cardboard.fillStyle="#eee";
+            cardboard.fillRect(0,0,cardW,cardH);
+            // var stroken = inspace.getContext("2d");
+            // stroken.moveTo(0, 0);
+            // stroken.lineTo(cardW, cardH);
+            // stroken.moveTo(cardW, 0);
+            // stroken.lineTo(0, cardH);
+            // stroken.stroke();
+        };
+        function controlTog() {
+            var dimSetRow = document.getElementById("dimSet");
+            var togKid = document.getElementById("togger");
+            if (dimSetRow.style.display === "flex" || dimSetRow.style.display === ""){
+                dimSetRow.style.display = "none";
+                togKid.innerHTML = "&#9960";
+                togKid.style.color = "#007bff";
+                togKid.style.backgroundColor = "#fff";
+            }else {
+                dimSetRow.style.display = "flex";
+                togKid.innerHTML = "&#9932";
+                togKid.style.color = "#fff";
+                togKid.style.backgroundColor = "#007bff";
+            };
+        };
+        // window.addEventListener("load", roost);
+        // window.addEventListener("resize", roost);
+        // window.addEventListener("click", roost);
+        // window.addEventListener("focus", roost);
+        // window.addEventListener("mouseover", roost);
+        // window.addEventListener("mousemove", roost);
+        function getCoords(event) {
+            // var lino = inspace.getContext("2d");
+            var pointY = event.clientY, pointX = event.clientX;
+            if (isNaN(pointX)) {
+                var coordKid = "&nbsp;";
+            } else {
+            // lino.moveTo(pointX, pointY);
+            var coordKid = "mouse at: x: " + parseInt(pointX) + ", y: " + parseInt(pointY);
+            this.coordRay = function() {return [pointX, pointY];}
+            // return coordRay;
+            }
+        document.getElementById("hereCoords").innerHTML = coordKid;
+        }
+        function clickCoords(event) {
+            var corrX = inspace.width * 37.6284/100;
+                var corrY = inspace.height * 16.3142/100;
+                var pointYs = event.clientY, pointXs = event.clientX;
+                var pointY = pointYs - corrY, pointX = pointXs - corrX;
+             document.getElementById("hereClick").innerHTML = "cliked at x: " + 
+                    parseInt(pointX) + " y: " + parseInt(pointY);
+        }
+        inspace.addEventListener("mousemove", getCoords);
+        var coordFinder = {
+            coordSet : function() {
+                var axisX = event.clientX, axisY = event.clientY;
+                var axesNow = [axisX, axisY];
+                return axesNow;
+            }
+        }
+                var startX, startY;
+                // counterLine = 0;
+        // inspace.addEventListener("click" , /* (function() { */
+                // startX = findCoords().coordRay[0]; startY = findCoords.coordRay[1];
+                // console.table([startX, startY]);
+            /* return *//* var  =  */function inkWrite(event) {
+                var corrX = inspace.width * 37.6284/100;
+                var corrY = inspace.height * 16.3142/100;
+                var pointYs = event.clientY, pointXs = event.clientX;
+                var pointY = pointYs - corrY, pointX = pointXs - corrX;
+                var lino = inspace.getContext("2d");
+                // if (counterLine > 1) {
+                    // startX = undefined;
+                // }
+                if (startX == undefined || startX == NaN) {
+                    startX = pointX; startY = pointY;
+                    console.log(startX + ", " + startY);
+                lino.moveTo(pointX, pointY);
+                } else {
+                lino.lineTo(pointX, pointY);
+                };
+                // lino.moveTo(100, 100);
+                // lino.lineTo(pointX, pointY);
+                lino.stroke();
+                (function(){
+                    return clickCoords(event);
+                })();
+                // (function (){
+                    // console.log("moved to b");
+                    // return lineDrawB(event);
+                // })();
+            }
+        // /* })() */);
+        function lineDrawB(event) {
+            // console.log("now in b");
+            var pointY = event.clientY, pointX = event.clientX;
+            var lino = inspace.getContext("2d");
+            lino.moveTo(pointX, pointY);
+            lino.lineTo(pointX, pointY);
+        }
+        function sqareDraw(event) {
+            var corrX = inspace.width * 37.6284/100;
+            var corrY = inspace.height * 16.3142/100;
+            var pointYs = event.clientY, pointXs = event.clientX;
+            var pointY = pointYs - corrY, pointX = pointXs - corrX;
+            var recto = inspace.getContext("2d");
+            if (startX == undefined || startX == NaN) {
+                console.log("starX to be defined:");
+                startX = pointX; startY = pointY;
+                console.log(startX + ", " + startY);
+                // lino.moveTo(pointX, pointY);
+            } else {
+                console.log("startX is defined now")
+                pointXd = pointX - startX; pointYd = pointY - startY;
+                // recto.fillStyle = "red";
+                recto.strokeRect(startX,startY,pointXd,pointYd);
+                startX = undefined;
+            };
+            // lino.moveTo(100, 100);
+            // lino.lineTo(pointX, pointY);
+            // lino.stroke();
+            (function(){
+                return clickCoords(event);
+            })();
+        }
+        function lineActive() {
+            startX = undefined;
+            inspace.removeEventListener("click", sqareDraw);
+            return inspace.addEventListener("click", inkWrite)
+        }
+        function squareActive() {
+            startX = undefined;
+            inspace.removeEventListener("click", inkWrite);
+            return inspace.addEventListener("click", sqareDraw)
+        }
+        // inspace.addEventListener("mousemove", (new roost).getCoords(event));
+        // document.getElementById("screenKid").addEventListener("click", roost);
+    </script>
+</body>
+</html>
